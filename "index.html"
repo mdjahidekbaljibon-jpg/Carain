@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carain Chatbot</title>
+</head>
+<body>
+  <h1>Carain ❤️</h1>
+  <p>হ্যালো! আমি তোমার চ্যাটবট।</p>
+
+  <input type="text" id="message" placeholder="এখানে মেসেজ লেখো">
+  <button onclick="sendMessage()">পাঠাও</button>
+
+  <p id="reply"></p>
+
+  <script>
+    function sendMessage() {
+      const input = document.getElementById("message");
+      const reply = document.getElementById("reply");
+      const message = input.value.trim();
+
+      if (!message) {
+        reply.textContent = "আগে একটা মেসেজ লেখো ❤️";
+        return;
+      }
+
+      reply.textContent = "তোমার মেসেজ পেয়েছি: " + message;
+      input.value = "";
+    }
+  </script>
+</body>
+</html>
