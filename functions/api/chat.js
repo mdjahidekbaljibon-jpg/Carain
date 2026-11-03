@@ -3,6 +3,7 @@ export async function onRequestPost({ request, env }) {
     if (!env.GEMINI_API_KEY) return Response.json({ error: "সার্ভারে Gemini API Key সেট করা হয়নি।" }, { status: 503 });
     const body = await request.json();
     const message = String(body.message || "").slice(0, 12000);
+    const adultMode = body.mode === "adult";
     const history = Array.isArray(body.history) ? body.history.slice(-12) : [];
     const parts = [];
     for (const item of history) {
@@ -18,7 +19,7 @@ export async function onRequestPost({ request, env }) {
     const upstream = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
-      body: JSON.stringify({ contents, generationConfig: { temperature: 0.7, maxOutputTokens: 2048 } })
+      body: JSON.stringify({ systemInstruction: { parts: [{ text: adultMode ? "You are CARAIN AI in an adults-only conversation mode. The user has self-attested to being 18 or older; this is not verified. You may discuss adult relationships, intimacy, consent, boundaries, sexual wellbeing, and sexual health in a respectful, educational, non-graphic way. Do not produce explicit pornographic sexual descriptions or sexual content involving minors, coercion, or non-consent. If age is uncertain, keep the response non-explicit." : "You are CARAIN AI, a helpful assistant. Respond clearly and respectfully." }] }, contents, generationConfig: { temperature: 0.7, maxOutputTokens: 2048 } })
     });
     const result = await upstream.json();
     if (!upstream.ok) return Response.json({ error: result.error?.message || "Gemini API অনুরোধ ব্যর্থ হয়েছে।" }, { status: upstream.status });
