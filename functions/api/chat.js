@@ -4,6 +4,7 @@ export async function onRequestPost({ request, env }) {
     const body = await request.json();
     const message = String(body.message || "").slice(0, 12000);
     const adultMode = body.mode === "adult";
+    const adultMode = body.mode === "adult";
     const history = Array.isArray(body.history) ? body.history.slice(-12) : [];
     const parts = [];
     for (const item of history) {
