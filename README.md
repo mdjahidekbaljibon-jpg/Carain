@@ -3,23 +3,26 @@
 Mobile-first Bengali AI chat app.
 
 ## Features
-- Gemini text chat and image understanding
+- Gemini chat and image understanding
+- In-app Settings for optional User ID, Gemini API Key, Image API URL and Image API Key
+- API connection test
+- Face reference stored in this browser's IndexedDB
+- Image generation UI and girlfriend-mode image-first flow
 - Adult conversation mode (non-graphic, consent/safety-aware)
-- Face reference photo stored locally in the browser's IndexedDB
-- Image-generation UI and girlfriend-mode image-first flow
-- Single-image generation instruction (provider behavior is not guaranteed)
 
-## Vercel setup
-Set these environment variables in Project Settings → Environment Variables:
+## API settings and security
+Settings saves API credentials in this browser's localStorage. This is convenient but **not encrypted**; use only on a trusted personal device. Credentials are sent over HTTPS to this app's server routes for requests and are not written to the repository. For a public multi-user app, replace this with authenticated server-side secret storage and per-user access controls.
 
-- `GEMINI_API_KEY`: Google AI Studio API key for chat.
-- `IMAGE_API_URL`: Your image-generation provider's endpoint.
-- `IMAGE_API_KEY`: Secret key for that provider.
+A User ID field is only a local profile label; it does not create authentication or an account system.
 
-The image endpoint is a provider adapter. It sends JSON:
+## Gemini
+Enter a Google AI Studio API key in Settings, or set `GEMINI_API_KEY` in Vercel environment variables.
+
+## Image provider adapter
+Enter an HTTPS Image API URL and API key in Settings. The adapter sends:
 ```json
 { "prompt": "...", "reference_image": "data:image/...;base64,...", "n": 1 }
 ```
-The provider must return either `{ "image_url": "https://..." }` or `{ "image_base64": "..." }`. Adapt `api/generate-image.js` to the chosen provider's documented API format. Image generation will return a setup error until a compatible provider is configured.
+The provider must return `{ "image_url": "https://..." }` or `{ "image_base64": "..." }`. Adapt `api/generate-image.js` to the selected provider's actual API format. Image generation does not work until a compatible provider is configured.
 
-Deploy the repository as a Vercel project. Never put API keys in frontend code or commit them to GitHub.
+Never put API keys in frontend source code or commit them to GitHub.
